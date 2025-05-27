@@ -18,7 +18,8 @@ A simple and elegant Flutter news application that fetches and displays up-to-da
 
 📸 SCREENSHOTS
 
-![ss1](https://github.com/user-attachments/assets/d9871b28-7847-4a4a-bc3c-abcd63714ea9)
-![ss2](https://github.com/user-attachments/assets/a04059bc-d692-4b50-9995-42a55ffbd7d9)
+<img src="https://github.com/user-attachments/assets/d9871b28-7847-4a4a-bc3c-abcd63714ea9" width="300">
+<br><br>
+<img src="https://github.com/user-attachments/assets/a04059bc-d692-4b50-9995-42a55ffbd7d9" width="300">
 
 
