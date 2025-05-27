@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:newsapp/pages/auth/forgot_pass.dart';
 import 'package:newsapp/widgets/loading_button.dart';
 import 'package:newsapp/constants/colors.dart';
 import 'package:newsapp/controllers/auth_controller.dart';
@@ -123,7 +124,9 @@ class SignInPage extends StatelessWidget {
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Get.to(ForgotPasswordPage(), transition: Transition.rightToLeft);
+                        },
                         child: Text(
                           'Forgot password?',
                           style: TextStyle(color: AppColors.primary),

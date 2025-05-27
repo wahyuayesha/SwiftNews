@@ -7,6 +7,7 @@ import 'package:newsapp/controllers/user_controller.dart';
 import 'package:newsapp/main.dart';
 import 'package:newsapp/pages/auth/sign_in.dart';
 import 'package:newsapp/pages/auth/sign_up.dart';
+import 'package:newsapp/widgets/password_dialog.dart';
 
 class AuthController extends GetxController {
   final SignUpController signUpController = Get.put(SignUpController());
@@ -15,6 +16,7 @@ class AuthController extends GetxController {
   final BookmarkController bookmarkController = Get.find();
 
   RxBool isloading = false.obs; // Menandakan apakah sedang loading
+
 
   // FUNGSI UNTUK (SIGN UP)
   Future signUp() async {
@@ -58,8 +60,8 @@ class AuthController extends GetxController {
     }
   }
 
-  // FUNGSI UNTUK (SIGN IN)
 
+  // FUNGSI UNTUK (SIGN IN)
   Future signIn() async {
     isloading.value = true;
     try {
@@ -67,7 +69,7 @@ class AuthController extends GetxController {
         email: signInController.emailController.text.trim(),
         password: signInController.passwordController.text.trim(),
       );
-      await userController.fetchUserData(); 
+      await userController.fetchUserData();
       await bookmarkController.fetchBookmarkedNews();
       // Menghapus data dari textfield setelah login
       signInController.emailController.clear();
@@ -91,6 +93,7 @@ class AuthController extends GetxController {
     }
   }
 
+
   // FUNGSI UNTUK (LOGOUT)
   Future<void> logout() async {
     // Menghapus data user dari controller
@@ -100,37 +103,63 @@ class AuthController extends GetxController {
     bookmarkController.clearBookmarks();
   }
 
+
   // FUNGSI UNTUK (HAPUS) AKUN
   Future<void> deleteUserAccount() async {
     final user = FirebaseAuth.instance.currentUser;
 
-    if (user != null) {
-      try {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid)
-            .delete();
-
-        await bookmarkController.deleteAllUserBookmarks();
-        await user.delete();
-
-        Get.snackbar('Success', 'Account deleted permanently.');
-        Get.offAll(Main());
-      } catch (e) {
-        Get.snackbar(
-          'Error',
-          'Error occured: $e',
-          backgroundColor: AppColors.errorSnackbar,
-          colorText: AppColors.errorSnackbarText,
-        );
-      }
-    } else {
+    if (user == null) {
       Get.snackbar(
         'Error',
         'User not found.',
         backgroundColor: AppColors.errorSnackbar,
         colorText: AppColors.errorSnackbarText,
       );
+      return;
+    }
+
+    final password = await showPasswordDialog();
+
+    if (password == null || password.isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Password must be filled to delete account.',
+        backgroundColor: AppColors.errorSnackbar,
+        colorText: AppColors.errorSnackbarText,
+      );
+      return;
+    }
+
+    try {
+      // reauthenticate user dengan credential email + password
+      final credential = EmailAuthProvider.credential(
+        email: user.email!,
+        password: password,
+      );
+      await user.reauthenticateWithCredential(credential);
+
+      // hapus data di firestore
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .delete();
+
+      // hapus semua bookmark user 
+      await bookmarkController.deleteAllUserBookmarks();
+
+      // hapus akun di firebase auth
+      await user.delete();
+
+      Get.snackbar('Success', 'Account deleted permanently.');
+      Get.offAll(Main());
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Error occured: $e',
+        backgroundColor: AppColors.errorSnackbar,
+        colorText: AppColors.errorSnackbarText,
+      );
     }
   }
 }
+

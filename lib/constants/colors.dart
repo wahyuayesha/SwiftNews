@@ -15,6 +15,8 @@ class AppColors {
 
   // Success Snackbar
   static const Color successSnackbar = Colors.green; // Warna snackbar sukses
-  static const Color successSnackbarText = Colors.white; // Warna teks snackbar sukses
+  static const Color successSnackbarText = Colors.white;
+
+  static var primaryColor; // Warna teks snackbar sukses
 }
 
