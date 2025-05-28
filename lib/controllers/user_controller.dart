@@ -7,9 +7,9 @@ import 'package:newsapp/models/user.dart';
 
 class UserController extends GetxController {
   var user = Rxn<User>(); // dari firebase auth
-  var userModel = Rxn<UserModel>(); // dari firestore 
+  var userModel = Rxn<UserModel>(); // dari firestore
 
-  RxBool isLoading = false.obs; 
+  RxBool isLoading = false.obs;
 
   // Ambil data user dari Firebase Auth di awal controller diinisialisasi
   @override
@@ -136,7 +136,12 @@ class UserController extends GetxController {
         'bug_report': bugReport,
         'sendAt': Timestamp.now(),
       });
-      Get.snackbar('Success', 'Bug reported successfully!');
+      Get.snackbar(
+        'Success',
+        'Bug report submited, thank you for your report!',
+        backgroundColor: AppColors.successSnackbar,
+        colorText: AppColors.successSnackbarText,
+      );
     } catch (e) {
       Get.snackbar(
         'Error',
