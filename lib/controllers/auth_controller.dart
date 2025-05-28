@@ -7,7 +7,7 @@ import 'package:newsapp/controllers/user_controller.dart';
 import 'package:newsapp/main.dart';
 import 'package:newsapp/pages/auth/sign_in.dart';
 import 'package:newsapp/pages/auth/sign_up.dart';
-import 'package:newsapp/widgets/password_dialog.dart';
+import 'package:newsapp/widgets/password_confirm_dialog.dart';
 
 class AuthController extends GetxController {
   final SignUpController signUpController = Get.put(SignUpController());
@@ -16,18 +16,20 @@ class AuthController extends GetxController {
   final BookmarkController bookmarkController = Get.find();
 
   RxBool isloading = false.obs; // Menandakan apakah sedang loading
+  
 
-
-  // FUNGSI UNTUK (SIGN UP)
+  // FUNCTION: Untuk (SIGN UP)
   Future signUp() async {
     isloading.value = true;
     try {
+      // Membuat user baru dengan email dan password
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
             email: signUpController.emailController.text.trim(),
             password: signUpController.passwordController.text.trim(),
           );
 
+      // Setelah berhasil sign up, simpan data user ke Firestore (tabel users)
       await FirebaseFirestore.instance
           .collection('users')
           .doc(userCredential.user!.uid)
@@ -36,10 +38,12 @@ class AuthController extends GetxController {
             'email': signUpController.emailController.text.trim(),
             'createdAt': DateTime.now().toString(),
           });
+
       // Menghapus data dari textfield setelah sign in
       signUpController.usernameController.clear();
       signUpController.emailController.clear();
       signUpController.passwordController.clear();
+      // Mengambil data user 
       await userController.fetchUserData();
     } on FirebaseAuthException catch (e) {
       Get.snackbar(
@@ -61,7 +65,7 @@ class AuthController extends GetxController {
   }
 
 
-  // FUNGSI UNTUK (SIGN IN)
+  // FUNCTION: Untuk (SIGN IN)
   Future signIn() async {
     isloading.value = true;
     try {
@@ -69,7 +73,9 @@ class AuthController extends GetxController {
         email: signInController.emailController.text.trim(),
         password: signInController.passwordController.text.trim(),
       );
+      // Setelah berhasil login, ambil data user
       await userController.fetchUserData();
+      // Ambil data bookmark setelah login
       await bookmarkController.fetchBookmarkedNews();
       // Menghapus data dari textfield setelah login
       signInController.emailController.clear();
@@ -94,17 +100,25 @@ class AuthController extends GetxController {
   }
 
 
-  // FUNGSI UNTUK (LOGOUT)
+  // FUNCTION: Untuk (LOG OUT)
   Future<void> logout() async {
-    // Menghapus data user dari controller
-    userController.userModel.value = null;
-    await FirebaseAuth.instance.signOut();
-    // Menghapus data bookmark
-    bookmarkController.clearBookmarks();
+    try {
+      await FirebaseAuth.instance.signOut();
+      // Menghapus data user dari controller
+      userController.userModel.value = null;
+      // Menghapus data bookmark
+      bookmarkController.clearControllerBookmarks();
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Log out failed: ${e.toString()}',
+        backgroundColor: AppColors.errorSnackbar,
+        colorText: AppColors.errorSnackbarText,
+      );
+    }
   }
 
-
-  // FUNGSI UNTUK (HAPUS) AKUN
+  // FUNCTION: Untuk (DELETE ACCOUNT)
   Future<void> deleteUserAccount() async {
     final user = FirebaseAuth.instance.currentUser;
 
@@ -145,7 +159,7 @@ class AuthController extends GetxController {
           .delete();
 
       // hapus semua bookmark user 
-      await bookmarkController.deleteAllUserBookmarks();
+      await bookmarkController.deleteFirestoreBookmarks();
 
       // hapus akun di firebase auth
       await user.delete();

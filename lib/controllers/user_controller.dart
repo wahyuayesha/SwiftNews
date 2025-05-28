@@ -9,14 +9,16 @@ class UserController extends GetxController {
   var user = Rxn<User>(); // dari firebase auth
   var userModel = Rxn<UserModel>(); // dari firestore (username, email, profile picture, createdAt)
 
-  // FETCH USER DATA DARI FIRESTORE DIAWAL
+  // Ambil data user dari Firebase Auth di awal controller diinisialisasi
   @override
   void onInit() {
     super.onInit();
+
     user.value = FirebaseAuth.instance.currentUser;
     if (user.value != null) {
       fetchUserData();
     }
+
     // Dengarkan perubahan status login user
     FirebaseAuth.instance.authStateChanges().listen((firebaseUser) async {
       user.value = firebaseUser;
@@ -28,7 +30,7 @@ class UserController extends GetxController {
     });
   }
 
-  // FUNCTION: UNTUK (MENGAMBIL) DATA USER DARI FIRESTORE
+  // FUNCTION: untuk mengambil data user dari Firestore
   Future<void> fetchUserData() async {
     final uid = user.value?.uid;
     try {
@@ -45,7 +47,7 @@ class UserController extends GetxController {
     }
   }
 
-  /// FUNCTION: UNTUK (MEMPERBARUI) DATA USER
+  /// FUNCTION: untuk memperbarui data user
   Future<void> updateUserData({
     required String currentPassword,
     required String newUsername,
@@ -115,7 +117,7 @@ class UserController extends GetxController {
     }
   }
 
-  // FUNCTION: REPORT BUG
+  // FUNCTION: report bug
   Future<void> reportBug(String bugReport) async {
     try {
       await FirebaseFirestore.instance.collection('bug_report').add({

@@ -165,7 +165,9 @@ class SignUpPage extends StatelessWidget {
                         isLoading: authController.isloading,
                         onPressed: () async {
                           await authController.signUp();
-                          Get.dialog(WelcomeDialog());
+                          if (userController.user.value != null) {
+                            Get.dialog(WelcomeDialog());
+                          }
                         },
                         label: 'Sign Up',
                       ),

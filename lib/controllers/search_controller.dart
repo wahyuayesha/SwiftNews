@@ -20,28 +20,24 @@ class SearchKeywordController extends GetxController {
     fetchKeywordNews();
   }
 
+  // FUNCTION: Mengambil berita dari API berdasarkan keyword yang diinputkan user
   Future<void> fetchKeywordNews() async {
     if (keyword.value.isEmpty) {
       return;
     }
 
     try {
-      isLoading.value =
-          true; // Menandakan bahwa aplikasi sedang melakukan proses loading
+      isLoading.value = true; 
       final response = await http.get(
-        // Melakukan request data berita dari API
         Uri.parse(
           "$baseUrl/everything?q=${Uri.encodeQueryComponent(keyword.value)}&sortBy=relevancy&apiKey=${AppConfig().apiKey}",
         ),
       );
 
       if (response.statusCode == 200) {
-        // Jika status code response 200 (berhasil)
-        final data = jsonDecode(response.body); // Mendekode data JSON
+        final data = jsonDecode(response.body); 
         if (data["articles"] != null) {
-          // Jika data berita tidak kosong
           articles.value = List<News>.from(
-            // Menyimpan data berita ke dalam variabel articles
             data["articles"].map<News>((item) => News.fromJson(item)).toList(),
           );
         }
@@ -51,7 +47,7 @@ class SearchKeywordController extends GetxController {
           'Failed to fetch news',
           backgroundColor: AppColors.errorSnackbar,
           colorText: AppColors.errorSnackbarText,
-        ); // Menampilkan pesan error
+        ); 
       }
     } catch (e) {
       Get.snackbar(
@@ -65,7 +61,7 @@ class SearchKeywordController extends GetxController {
     }
   }
 
-  // Fungsi untuk mencari berita berdasarkan keyword yang diinputkan user
+  // FUNCTION: Untuk mencari berita berdasarkan keyword yang diinputkan user
   void searchNews(String newKeyword) {
     keyword.value = newKeyword; // Mengubah keyword yang dicari
     fetchKeywordNews();

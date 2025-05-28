@@ -41,7 +41,7 @@ class BookmarkController extends GetxController {
     }
   }
 
-  // Menghapus berita dari bookmark
+  // FUNCTION: Menghapus berita dari bookmark
   Future<void> removeBookmark(News news) async {
     try {
       final snapshot =
@@ -67,7 +67,7 @@ class BookmarkController extends GetxController {
     }
   }
 
-  // FUNGSI: Fetch semua bookmark user dari Firestore
+  // FUNCTION: Fetch semua bookmark user dari Firestore
   Future<void> fetchBookmarkedNews() async {
     try {
       final email = userController.userModel.value?.email;
@@ -94,7 +94,8 @@ class BookmarkController extends GetxController {
     }
   }
 
-  Future<void> deleteAllUserBookmarks() async {
+  // FUNCTION: Menghapus semua bookmark user di Firestore
+  Future<void> deleteFirestoreBookmarks() async {
     try {
       final email = userController.userModel.value?.email;
 
@@ -120,7 +121,8 @@ class BookmarkController extends GetxController {
     }
   }
 
-  void clearBookmarks() {
+  // FUNCTION: Menghapus semua bookmark dari controller
+  void clearControllerBookmarks() {
     bookmarked_news.clear();
   }
 }

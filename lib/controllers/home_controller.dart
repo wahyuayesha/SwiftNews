@@ -19,6 +19,7 @@ class HomeController extends GetxController {
     fetchNews(type: 'everything', sortBy: 'popularity'); // Ambil berita populer
   } 
 
+  // FUNCTION: Mengambil berita dari API
   Future<void> fetchNews({
     required String type,
     String? sortBy,

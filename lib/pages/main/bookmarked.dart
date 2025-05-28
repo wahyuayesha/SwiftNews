@@ -49,8 +49,8 @@ class BookmarkView extends StatelessWidget {
                 );
                 return;
               }
-              bookmarkController.deleteAllUserBookmarks();
-              bookmarkController.clearBookmarks();
+              bookmarkController.deleteFirestoreBookmarks();
+              bookmarkController.clearControllerBookmarks();
               Get.back();
             },
           );

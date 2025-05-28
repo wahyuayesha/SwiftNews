@@ -10,8 +10,7 @@ class NewsController extends GetxController {
   final String baseUrl = 'https://newsapi.org/v2/top-headlines';
 
   var articles = <News>[].obs; // Menyimpan data berita yang didapat dari API
-  var selectedCategory =
-      'business'.obs; // Menampung kategori berita yang dipilih
+  var selectedCategory = 'business'.obs; // Menampung kategori berita yang dipilih
   var isLoading = false.obs; // Menandakan status loading
 
   // Kategori berita yang akan ditampilkan
@@ -32,7 +31,7 @@ class NewsController extends GetxController {
     fetchNews();
   }
 
-  // Fungsi untuk mengambil data berita dari API
+  // FUNCTION: Mengambil berita dari API berdasarkan kategori yang dipilih
   Future<void> fetchNews() async {
     try {
       isLoading.value = true;
@@ -43,10 +42,8 @@ class NewsController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        // Jika status code response 200 (berhasil)
-        final data = jsonDecode(response.body); // Mendekode data JSON
+        final data = jsonDecode(response.body); 
         if (data["articles"] != null) {
-          // Jika data berita tidak kosong
           articles.value = List<News>.from(
             data["articles"].map<News>((item) => News.fromJson(item)).toList(),
           );
@@ -71,12 +68,14 @@ class NewsController extends GetxController {
     }
   }
 
+  // FUNCTION: Untuk mengupdate kategori berita yang dipilih
   void updateCategory(String category) {
     selectedCategory.value = category;
     fetchNews();
     update();
   }
 
+  // FUNCTION: Untuk mengecek apakah kategori yang dipilih sama dengan kategori yang diberikan
   bool isSelectedCategory(String category) {
     return selectedCategory.value == category;
   }

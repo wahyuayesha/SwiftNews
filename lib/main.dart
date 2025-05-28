@@ -43,8 +43,6 @@ void main() async {
   await userController.fetchUserData(); // <- pastikan fungsi ini ada dan mengisi userModel
   await Get.find<BookmarkController>().fetchBookmarkedNews();
 }
-
-
   runApp(MyApp());
 }
 

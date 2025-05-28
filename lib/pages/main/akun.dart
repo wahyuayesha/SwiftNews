@@ -239,7 +239,7 @@ class MyAccount extends StatelessWidget {
     if (user == null) {
       return const Center(child: CircularProgressIndicator());
     }
-
+    
     return SizedBox(
       height: 150,
       child: Column(
