@@ -1,4 +1,3 @@
-// models/user_model.dart
 class UserModel {
   final String username;
   final String email;
@@ -12,6 +11,7 @@ class UserModel {
     required this.createdAt,
   });
 
+  // 
   factory UserModel.fromMap(Map<String, dynamic> map) {
   return UserModel(
     username: map['username'] ?? 'No Username',
@@ -20,8 +20,7 @@ class UserModel {
     createdAt: map['createdAt'] ?? 'No date',
   );
 }
-
-  
+  // konversi dari objek UserModel ke Map untuk Firestore
   Map<String, dynamic> toMap() {
     return {
       'username': username,

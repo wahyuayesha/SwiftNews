@@ -7,7 +7,9 @@ import 'package:newsapp/models/user.dart';
 
 class UserController extends GetxController {
   var user = Rxn<User>(); // dari firebase auth
-  var userModel = Rxn<UserModel>(); // dari firestore (username, email, profile picture, createdAt)
+  var userModel = Rxn<UserModel>(); // dari firestore 
+
+  RxBool isLoading = false.obs; 
 
   // Ambil data user dari Firebase Auth di awal controller diinisialisasi
   @override
@@ -68,6 +70,7 @@ class UserController extends GetxController {
 
     // 1. UPDATE DATA FIREBASE AUTH
     try {
+      isLoading.value = true;
       // Re-auth user
       AuthCredential credential = EmailAuthProvider.credential(
         email: user.email!,
@@ -94,7 +97,12 @@ class UserController extends GetxController {
       }
 
       await fetchUserData(); // Memperbarui data userModel di controller
-      Get.snackbar('Succes', 'Your data has been updated successfully!');
+      Get.snackbar(
+        'Succes',
+        'Your data has been updated successfully!',
+        backgroundColor: AppColors.successSnackbar,
+        colorText: AppColors.successSnackbarText,
+      );
       Get.offAll(Main());
     } catch (e) {
       if (e.toString().contains(
@@ -114,6 +122,8 @@ class UserController extends GetxController {
           colorText: AppColors.errorSnackbarText,
         );
       }
+    } finally {
+      isLoading.value = false;
     }
   }
 

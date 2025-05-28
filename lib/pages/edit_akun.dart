@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:newsapp/constants/colors.dart';
 import 'package:newsapp/controllers/auth_controller.dart';
 import 'package:newsapp/controllers/user_controller.dart';
+import 'package:newsapp/widgets/alert.dart';
 
 class EditProfileController extends GetxController {
   var obscurePassword = true.obs;
@@ -26,7 +27,8 @@ class EditAkun extends StatelessWidget {
 
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController currentPasswordController = TextEditingController();
+  final TextEditingController currentPasswordController =
+      TextEditingController();
   final TextEditingController newPasswordController = TextEditingController();
 
   var profilePictureUrl = '';
@@ -56,7 +58,8 @@ class EditAkun extends StatelessWidget {
                           return CircleAvatar(
                             radius: 50,
                             backgroundImage:
-                                user != null && user.profilePictureUrl.isNotEmpty
+                                user != null &&
+                                        user.profilePictureUrl.isNotEmpty
                                     ? AssetImage(user.profilePictureUrl)
                                     : AssetImage('assets/profile.jpeg'),
                           );
@@ -84,8 +87,13 @@ class EditAkun extends StatelessWidget {
                                         return GestureDetector(
                                           onTap: () {
                                             // Lakukan sesuatu saat gambar dipilih
-                                            profilePictureUrl = 'assets/profile/profile${index + 1}.jpg';
-                                            Get.snackbar('Notice', 'Save to see profile picture changes',duration: Duration(seconds: 2),);
+                                            profilePictureUrl =
+                                                'assets/profile/profile${index + 1}.jpg';
+                                            Get.snackbar(
+                                              'Notice',
+                                              'Save to see profile picture changes',
+                                              duration: Duration(seconds: 2),
+                                            );
                                             Navigator.pop(context);
                                           },
                                           child: CircleAvatar(
@@ -133,36 +141,9 @@ class EditAkun extends StatelessWidget {
                     }),
                     SizedBox(height: 40),
                     myTextField(
-                      'Username',
+                      'New Username',
                       Icon(Icons.person, color: AppColors.textFieldBorder),
                       usernameController,
-                    ),
-                    SizedBox(height: 15),
-                    // myTextField(
-                    //   'Email',
-                    //   Icon(Icons.email, color: AppColors.textFieldBorder),
-                    //   emailController,
-                    // ),
-                    // SizedBox(height: 15),
-                    Divider(color: AppColors.textFieldBackground, thickness: 1),
-                    SizedBox(height: 15),
-                    Obx(
-                      () => myTextField(
-                        'Current Password',
-                        Icon(Icons.lock, color: AppColors.textFieldBorder),
-                        currentPasswordController,
-                        obscureText: editController.obscurePassword.value,
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            editController.obscurePassword.value
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                            color: AppColors.textFieldBorder,
-                          ),
-                          onPressed:
-                              () => editController.toggleObscurePassword(),
-                        ),
-                      ),
                     ),
                     SizedBox(height: 15),
                     Obx(
@@ -183,15 +164,53 @@ class EditAkun extends StatelessWidget {
                         ),
                       ),
                     ),
+                    SizedBox(height: 15),
+                    Divider(color: AppColors.textFieldBackground, thickness: 1),
+                    SizedBox(height: 15),
+                    Obx(
+                      () => myTextField(
+                        'Current Password',
+                        Icon(Icons.lock, color: AppColors.textFieldBorder),
+                        currentPasswordController,
+                        obscureText: editController.obscurePassword.value,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            editController.obscurePassword.value
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: AppColors.textFieldBorder,
+                          ),
+                          onPressed:
+                              () => editController.toggleObscurePassword(),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
               SizedBox(height: 50),
               TextButton(
                 onPressed: () {
-                  alert();
+                  alert(
+                    'Save Changes',
+                    'Are you sure you want to save changes?',
+                    () async {
+                      await userController.updateUserData(
+                        newUsername: usernameController.text.trim(),
+                        currentPassword: currentPasswordController.text.trim(),
+                        newPassword: newPasswordController.text.trim(),
+                        newProfilePictureUrl: profilePictureUrl.trim(),
+                      );
+                    },
+                  );
                 },
-                child: Text('Save Changes'),
+                child:
+                    authController.isloading.value
+                        ? CircularProgressIndicator(color: AppColors.primary)
+                        : Text(
+                          'Save Changes',
+                          style: TextStyle(color: AppColors.primary),
+                        ),
               ),
             ],
           ),
@@ -231,26 +250,26 @@ class EditAkun extends StatelessWidget {
   }
 
   // Alert dialog untuk konfirmasi simpan perubahan
-  void alert() {
-    Get.defaultDialog(
-      title: 'Save Changes',
-      titleStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-      middleText: 'Are you sure you want save changes?',
-      textConfirm: 'Yes',
-      textCancel: 'No',
-      confirmTextColor: Colors.white,
-      buttonColor: AppColors.primary,
-      onConfirm: () async {
-        await userController.updateUserData(
-          newUsername: usernameController.text.trim(),
-          currentPassword: currentPasswordController.text.trim(),
-          newPassword: newPasswordController.text.trim(),
-          newProfilePictureUrl: profilePictureUrl.trim(),
-        );
-      },
-      onCancel: () {
-        Get.back();
-      },
-    );
-  }
+  // void alert() {
+  //   Get.defaultDialog(
+  //     title: 'Save Changes',
+  //     titleStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+  //     middleText: 'Are you sure you want save changes?',
+  //     textConfirm: 'Yes',
+  //     textCancel: 'No',
+  //     confirmTextColor: Colors.white,
+  //     buttonColor: AppColors.primary,
+  //     onConfirm: () async {
+  //       await userController.updateUserData(
+  //         newUsername: usernameController.text.trim(),
+  //         currentPassword: currentPasswordController.text.trim(),
+  //         newPassword: newPasswordController.text.trim(),
+  //         newProfilePictureUrl: profilePictureUrl.trim(),
+  //       );
+  //     },
+  //     onCancel: () {
+  //       Get.back();
+  //     },
+  //   );
+  // }
 }

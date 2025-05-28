@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-void alert(String title, String message, Function futureAction) {
+void alert(String title, String message, Function action) {
   Get.defaultDialog(
     title: title,
     titleStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -10,9 +10,9 @@ void alert(String title, String message, Function futureAction) {
     textCancel: 'No',
     confirmTextColor: Colors.white,
     buttonColor: Colors.redAccent,
-    onConfirm: () async {
+    onConfirm: () {
       Get.back(); 
-      await futureAction(); 
+      action(); 
     },
     onCancel: () {
       Get.back();
