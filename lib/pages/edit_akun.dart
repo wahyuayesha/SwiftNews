@@ -31,7 +31,8 @@ class EditAkun extends StatelessWidget {
       TextEditingController();
   final TextEditingController newPasswordController = TextEditingController();
 
-  var profilePictureUrl = '';
+  final RxString profilePictureUrl =
+      ''.obs; // URL gambar profil yang dipilih sementara
 
   @override
   Widget build(BuildContext context) {
@@ -55,15 +56,20 @@ class EditAkun extends StatelessWidget {
                       children: [
                         Obx(() {
                           final user = userController.userModel.value;
+                          final selectedUrl = profilePictureUrl.value;
+
                           return CircleAvatar(
                             radius: 50,
                             backgroundImage:
-                                user != null &&
+                                selectedUrl.isNotEmpty
+                                    ? AssetImage(selectedUrl)
+                                    : user != null &&
                                         user.profilePictureUrl.isNotEmpty
                                     ? AssetImage(user.profilePictureUrl)
-                                    : AssetImage('assets/profile.jpeg'),
+                                    : AssetImage('assets/profilejpg'),
                           );
                         }),
+
                         IconButton.filled(
                           icon: Icon(Icons.edit),
                           onPressed: () {
@@ -87,13 +93,8 @@ class EditAkun extends StatelessWidget {
                                         return GestureDetector(
                                           onTap: () {
                                             // Lakukan sesuatu saat gambar dipilih
-                                            profilePictureUrl =
+                                            profilePictureUrl.value =
                                                 'assets/profile/profile${index + 1}.jpg';
-                                            Get.snackbar(
-                                              'Notice',
-                                              'Save to see profile picture changes',
-                                              duration: Duration(seconds: 2),
-                                            );
                                             Navigator.pop(context);
                                           },
                                           child: CircleAvatar(
@@ -199,7 +200,7 @@ class EditAkun extends StatelessWidget {
                         newUsername: usernameController.text.trim(),
                         currentPassword: currentPasswordController.text.trim(),
                         newPassword: newPasswordController.text.trim(),
-                        newProfilePictureUrl: profilePictureUrl.trim(),
+                        newProfilePictureUrl: profilePictureUrl.value.trim(),
                       );
                     },
                   );
@@ -248,28 +249,4 @@ class EditAkun extends StatelessWidget {
       ),
     );
   }
-
-  // Alert dialog untuk konfirmasi simpan perubahan
-  // void alert() {
-  //   Get.defaultDialog(
-  //     title: 'Save Changes',
-  //     titleStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-  //     middleText: 'Are you sure you want save changes?',
-  //     textConfirm: 'Yes',
-  //     textCancel: 'No',
-  //     confirmTextColor: Colors.white,
-  //     buttonColor: AppColors.primary,
-  //     onConfirm: () async {
-  //       await userController.updateUserData(
-  //         newUsername: usernameController.text.trim(),
-  //         currentPassword: currentPasswordController.text.trim(),
-  //         newPassword: newPasswordController.text.trim(),
-  //         newProfilePictureUrl: profilePictureUrl.trim(),
-  //       );
-  //     },
-  //     onCancel: () {
-  //       Get.back();
-  //     },
-  //   );
-  // }
 }
