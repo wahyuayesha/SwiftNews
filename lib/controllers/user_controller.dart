@@ -1,15 +1,16 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:newsapp/constants/colors.dart';
 import 'package:newsapp/main.dart';
 import 'package:newsapp/models/user.dart';
+import 'package:newsapp/services/fire_services.dart';
 
 class UserController extends GetxController {
   var user = Rxn<User>(); // dari firebase auth
   var userModel = Rxn<UserModel>(); // dari firestore
 
   RxBool isLoading = false.obs;
+  final service = FireServices();
 
   // Ambil data user dari Firebase Auth di awal controller diinisialisasi
   @override
@@ -34,17 +35,23 @@ class UserController extends GetxController {
 
   // FUNCTION: untuk mengambil data user dari Firestore
   Future<void> fetchUserData() async {
-    final uid = user.value?.uid;
-    try {
-      final doc =
-          await FirebaseFirestore.instance.collection('users').doc(uid).get();
-
-      if (doc.exists) {
-        userModel.value = UserModel.fromMap(doc.data()!);
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid != null) {
+      final data = await FireServices().fetchUserData(
+        uid,
+      ); // panggil fungsi dari FireServices
+      if (data != null) {
+        userModel.value = data;
       } else {
         userModel.value = null;
+        Get.snackbar(
+          'Error',
+          'Failed to fetch user data',
+          backgroundColor: AppColors.errorSnackbar,
+          colorText: AppColors.errorSnackbarText,
+        );
       }
-    } catch (e) {
+    } else {
       userModel.value = null;
     }
   }
@@ -56,96 +63,53 @@ class UserController extends GetxController {
     required String newProfilePictureUrl,
     required String newPassword,
   }) async {
-    User? user = FirebaseAuth.instance.currentUser;
+    isLoading.value = true;
 
-    if (user == null) {
+    final result = await service.updateUserData(
+      currentPassword: currentPassword,
+      newUsername: newUsername,
+      newProfilePictureUrl: newProfilePictureUrl,
+      newPassword: newPassword,
+    );
+
+    isLoading.value = false;
+
+    if (result == null) {
+      await fetchUserData();
       Get.snackbar(
-        'Error',
-        'User not logged in.',
-        backgroundColor: AppColors.errorSnackbar,
-        colorText: AppColors.errorSnackbarText,
-      );
-      return;
-    }
-
-    // 1. UPDATE DATA FIREBASE AUTH
-    try {
-      isLoading.value = true;
-      // Re-auth user
-      AuthCredential credential = EmailAuthProvider.credential(
-        email: user.email!,
-        password: currentPassword,
-      );
-
-      await user.reauthenticateWithCredential(credential);
-
-      // Update password jika diisi
-      if (newPassword.isNotEmpty) {
-        await user.updatePassword(newPassword);
-      }
-
-      // 2. UPDATE DATA FIRESTORE
-      Map<String, dynamic> newData = {};
-      if (newUsername.isNotEmpty) newData['username'] = newUsername;
-      if (newProfilePictureUrl.isNotEmpty) newData['profilePicture'] = newProfilePictureUrl;
-
-      if (newData.isNotEmpty) {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid)
-            .update(newData);
-      }
-
-      await fetchUserData(); // Memperbarui data userModel di controller
-      Get.snackbar(
-        'Succes',
+        'Success',
         'Your data has been updated successfully!',
         backgroundColor: AppColors.successSnackbar,
         colorText: AppColors.successSnackbarText,
       );
-      Get.offAll(Main());
-    } catch (e) {
-      if (e.toString().contains(
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithCredential',
-      )) {
-        Get.snackbar(
-          'Error',
-          'Password incorrect.',
-          backgroundColor: AppColors.errorSnackbar,
-          colorText: AppColors.errorSnackbarText,
-        );
-      } else {
-        Get.snackbar(
-          'Error',
-          'Failed to update data: ${e.toString()}',
-          backgroundColor: AppColors.errorSnackbar,
-          colorText: AppColors.errorSnackbarText,
-        );
-      }
-    } finally {
-      isLoading.value = false;
+      Get.offAll(() => Main());
+    } else {
+      Get.snackbar(
+        'Error',
+        result,
+        backgroundColor: AppColors.errorSnackbar,
+        colorText: AppColors.errorSnackbarText,
+      );
     }
   }
 
   // FUNCTION: report bug
   Future<void> reportBug(String bugReport) async {
-    try {
-      await FirebaseFirestore.instance.collection('bug_report').add({
-        'email': userModel.value?.email,
-        'username': userModel.value?.username,
-        'bug_report': bugReport,
-        'sendAt': Timestamp.now(),
-      });
+    final error = await service.reportBug(bugReport, 
+      userModel.value?.email ?? 'No email',
+      userModel.value?.username ?? 'No username',
+    );
+    if (error == null) {
       Get.snackbar(
         'Success',
-        'Bug report submited, thank you for your report!',
+        'Bug report submitted, thank you!',
         backgroundColor: AppColors.successSnackbar,
         colorText: AppColors.successSnackbarText,
       );
-    } catch (e) {
+    } else {
       Get.snackbar(
         'Error',
-        'Failed to report bug: ${e.toString()}',
+        'Failed to report bug: $error',
         backgroundColor: AppColors.errorSnackbar,
         colorText: AppColors.errorSnackbarText,
       );
