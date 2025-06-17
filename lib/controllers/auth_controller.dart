@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:newsapp/constants/app_routes.dart';
 import 'package:newsapp/constants/colors.dart';
 import 'package:newsapp/controllers/bookmark_controller.dart';
 import 'package:newsapp/controllers/user_controller.dart';
-import 'package:newsapp/main.dart';
 import 'package:newsapp/pages/auth/sign_in.dart';
 import 'package:newsapp/pages/auth/sign_up.dart';
 import 'package:newsapp/widgets/password_confirm_dialog.dart';
@@ -165,7 +165,7 @@ class AuthController extends GetxController {
       await user.delete();
 
       Get.snackbar('Success', 'Account deleted permanently.');
-      Get.offAll(Main());
+      Get.offAllNamed(AppRoutes.main);
     } catch (e) {
       Get.snackbar(
         'Error',

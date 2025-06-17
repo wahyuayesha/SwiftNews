@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   static const Color primary = Colors.deepOrangeAccent; // Warna utama
+  static final Color primary08 = Colors.deepOrangeAccent.withOpacity(0.8); // Warna utama dengan transparansi 80% 
+
   static const Color background = Colors.white;        // Latar belakang aplikasi
+
   static final Color textFieldBackground = Colors.grey.shade200; // Background TextField dan button 
   static const Color textFieldBorder = Colors.grey;    // Border TextField dan button
   static const Color textColor = Colors.black;        // Warna teks
@@ -16,7 +19,5 @@ class AppColors {
   // Success Snackbar
   static const Color successSnackbar = Colors.green; // Warna snackbar sukses
   static const Color successSnackbarText = Colors.white;
-
-  static var primaryColor; // Warna teks snackbar sukses
 }
 

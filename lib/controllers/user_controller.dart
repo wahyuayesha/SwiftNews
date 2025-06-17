@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:newsapp/constants/app_routes.dart';
 import 'package:newsapp/constants/colors.dart';
-import 'package:newsapp/main.dart';
 import 'package:newsapp/models/user.dart';
 import 'package:newsapp/services/fire_services.dart';
 
@@ -65,7 +65,7 @@ class UserController extends GetxController {
   }) async {
     isLoading.value = true;
 
-    final result = await service.updateUserData(
+    final error = await service.updateUserData(
       currentPassword: currentPassword,
       newUsername: newUsername,
       newProfilePictureUrl: newProfilePictureUrl,
@@ -74,7 +74,7 @@ class UserController extends GetxController {
 
     isLoading.value = false;
 
-    if (result == null) {
+    if (error == null) {
       await fetchUserData();
       Get.snackbar(
         'Success',
@@ -82,11 +82,11 @@ class UserController extends GetxController {
         backgroundColor: AppColors.successSnackbar,
         colorText: AppColors.successSnackbarText,
       );
-      Get.offAll(() => Main());
+      Get.offAllNamed(AppRoutes.main);
     } else {
       Get.snackbar(
         'Error',
-        result,
+        error,
         backgroundColor: AppColors.errorSnackbar,
         colorText: AppColors.errorSnackbarText,
       );

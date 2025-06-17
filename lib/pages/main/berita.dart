@@ -33,7 +33,7 @@ class BeritaScreen extends StatelessWidget {
                       final category = newsController.categories[index];
                       final isSelected =
                           category == newsController.selectedCategory.value;
-
+              
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5.0),
                         child: GestureDetector(

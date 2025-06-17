@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+import 'package:newsapp/constants/app_routes.dart';
 import 'package:newsapp/constants/colors.dart';
 import 'package:newsapp/functions/format_waktu.dart';
 import 'package:newsapp/widgets/appbar.dart';
@@ -9,7 +10,6 @@ import 'package:newsapp/widgets/newsTile.dart';
 import 'package:newsapp/controllers/home_controller.dart';
 import 'package:newsapp/controllers/webView_controller.dart';
 import 'package:newsapp/models/news.dart';
-import 'package:newsapp/pages/news_content.dart';
 import 'package:newsapp/widgets/shimmer_news.dart';
 
 class HomePage extends StatelessWidget {
@@ -96,7 +96,7 @@ class HomePage extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         webViewController.loadUrl(news.url);
-        Get.to(WebViewPage());
+        Get.toNamed(AppRoutes.newsContent);
       },
       child: Stack(
         children: [

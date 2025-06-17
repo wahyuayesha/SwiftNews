@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:newsapp/constants/app_routes.dart';
 import 'package:newsapp/constants/colors.dart';
 import 'package:newsapp/controllers/auth_controller.dart';
 import 'package:newsapp/controllers/user_controller.dart';
 import 'package:newsapp/functions/format_waktu.dart';
-import 'package:newsapp/pages/edit_akun.dart';
 import 'package:newsapp/widgets/alert.dart';
-import 'package:newsapp/widgets/appbar.dart';
+import 'package:newsapp/widgets/clip.dart';
 // import 'package:newsapp/pages/edit_akun.dart';
 
 // ignore: must_be_immutable
@@ -18,136 +18,160 @@ class MyAccount extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+
     return Scaffold(
-      appBar: AppBar(title: MyAppBar(), backgroundColor: AppColors.background),
+      appBar: AppBar(backgroundColor: AppColors.primary08),
       backgroundColor: AppColors.background,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(25.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              // Profile
-              Center(
-                child: Column(
-                  children: [
-                    Obx(() {
-                      final user = userController.userModel.value;
-                      return CircleAvatar(
-                        radius: 50,
-                        backgroundImage:
-                            user != null && user.profilePictureUrl.isNotEmpty
-                                ? AssetImage(user.profilePictureUrl)
-                                : AssetImage('assets/profile.jpeg'),
-                      );
-                    }),
 
-                    const SizedBox(height: 10),
-                    Obx(() {
-                      final user = userController.userModel.value;
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            user != null && user.username.isNotEmpty
-                                ? user.username
-                                : 'Loading...',
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            user != null && user.email.isNotEmpty
-                                ? user.email
-                                : 'Loading...',
-                            style: const TextStyle(color: Colors.black45),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      );
-                    }),
+      body: Stack(
+        children: [
+          ClipPath(
+            clipper: HeaderClipPath(),
+            child: Container(
+              height: height * 0.13,
+              width: width,
+              decoration: BoxDecoration(color: AppColors.primary08),
+            ),
+          ),
 
-                    const SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: () {
-                        Get.to(EditAkun(), transition: Transition.fade);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        shadowColor: Colors.transparent,
-                        backgroundColor: AppColors.primary,
-                        foregroundColor: AppColors.background,
-                      ),
-                      child: const Text('Edit Profile'),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-              // Tile-tile pengaturan
-              Column(
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(25.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  tilePengaturan(
-                    context,
-                    const Icon(
-                      Icons.account_circle_outlined,
-                      color: Colors.grey,
+                  // Profile
+                  Center(
+                    child: Column(
+                      children: [
+                        Obx(() {
+                          final user = userController.userModel.value;
+                          return CircleAvatar(
+                            radius: 50,
+                            backgroundImage:
+                                user != null &&
+                                        user.profilePictureUrl.isNotEmpty
+                                    ? AssetImage(user.profilePictureUrl)
+                                    : AssetImage('assets/profile.jpeg'),
+                          );
+                        }),
+
+                        const SizedBox(height: 10),
+                        Obx(() {
+                          final user = userController.userModel.value;
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                user != null && user.username.isNotEmpty
+                                    ? user.username
+                                    : 'Loading...',
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                user != null && user.email.isNotEmpty
+                                    ? user.email
+                                    : 'Loading...',
+                                style: const TextStyle(color: Colors.black45),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          );
+                        }),
+
+                        const SizedBox(height: 10),
+                        ElevatedButton(
+                          onPressed: () {
+                            Get.toNamed(AppRoutes.editAkun);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            shadowColor: Colors.transparent,
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: AppColors.background,
+                          ),
+                          child: const Text('Edit Profile'),
+                        ),
+                      ],
                     ),
-                    'Account',
-                    account(context),
-                    const Icon(Icons.navigate_next_rounded),
                   ),
-                  tilePengaturan(
-                    context,
-                    const Icon(Icons.help_outline_outlined, color: Colors.grey),
-                    'About',
-                    about(context),
-                    const Icon(Icons.navigate_next_rounded),
+                  const SizedBox(height: 20),
+                  // Tile-tile pengaturan
+                  Column(
+                    children: [
+                      tilePengaturan(
+                        context,
+                        const Icon(
+                          Icons.account_circle_outlined,
+                          color: Colors.grey,
+                        ),
+                        'Account',
+                        account(context),
+                        const Icon(Icons.navigate_next_rounded),
+                      ),
+                      tilePengaturan(
+                        context,
+                        const Icon(
+                          Icons.help_outline_outlined,
+                          color: Colors.grey,
+                        ),
+                        'About',
+                        about(context),
+                        const Icon(Icons.navigate_next_rounded),
+                      ),
+                      tilePengaturan(
+                        context,
+                        const Icon(
+                          Icons.bug_report_outlined,
+                          color: Colors.grey,
+                        ),
+                        'Report Bug',
+                        reportBug(context),
+                        const Icon(Icons.navigate_next_rounded),
+                      ),
+                      // tilePengaturan(
+                      //   context,
+                      //   const Icon(Icons.light_mode_outlined, color: Colors.grey),
+                      //   'Theme',
+                      //   reportBug(context),
+                      //   Switch(
+                      //     value: false,
+                      //     onChanged: (value) {
+                      //       value = !value;
+                      //     },
+                      //     inactiveTrackColor: AppColors.primary),
+                      // ),
+                    ],
                   ),
-                  tilePengaturan(
-                    context,
-                    const Icon(Icons.bug_report_outlined, color: Colors.grey),
-                    'Report Bug',
-                    reportBug(context),
-                    const Icon(Icons.navigate_next_rounded),
+                  const SizedBox(height: 20),
+
+                  // Button Sign Out
+                  TextButton(
+                    onPressed: () {
+                      authController.logout();
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Icon(Icons.logout_outlined, color: AppColors.primary),
+                        const SizedBox(width: 5),
+                        Text(
+                          'Sign out',
+                          style: TextStyle(color: AppColors.primary),
+                        ),
+                      ],
+                    ),
                   ),
-                  // tilePengaturan(
-                  //   context,
-                  //   const Icon(Icons.light_mode_outlined, color: Colors.grey),
-                  //   'Theme',
-                  //   reportBug(context),
-                  //   Switch(
-                  //     value: false,
-                  //     onChanged: (value) {
-                  //       value = !value;
-                  //     },
-                  //     inactiveTrackColor: AppColors.primary),
-                  // ),
                 ],
               ),
-              const SizedBox(height: 20),
-
-              // Button Sign Out
-              TextButton(
-                onPressed: () {
-                  authController.logout();
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Icon(Icons.logout_outlined, color: AppColors.primary),
-                    const SizedBox(width: 5),
-                    Text(
-                      'Sign out',
-                      style: TextStyle(color: AppColors.primary),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -174,7 +198,12 @@ class MyAccount extends StatelessWidget {
           showDialog(
             context: context,
             builder: (context) {
-              return AlertDialog(content: route);
+              return AlertDialog(
+                content: route,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(13),
+                ),
+              );
             },
           );
         },
@@ -186,8 +215,8 @@ class MyAccount extends StatelessWidget {
   Widget reportBug(context) {
     final TextEditingController reportController = TextEditingController();
     return SizedBox(
-      height: 150,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             'Report Bug',
@@ -195,11 +224,11 @@ class MyAccount extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           TextField(
+            maxLines: 4,
             controller: reportController,
             decoration: InputDecoration(
-              hintText: 'Enter bug description',
+              hintText: 'Enter bug description...',
               hintStyle: TextStyle(color: AppColors.textFieldBorder),
-              prefixIcon: Icon(Icons.search, color: AppColors.textFieldBorder),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(13),
               ),
@@ -217,9 +246,18 @@ class MyAccount extends StatelessWidget {
           const SizedBox(height: 10),
           TextButton(
             onPressed: () async {
-              // Kirim laporan bug
-              await userController.reportBug(reportController.text);
-              Navigator.pop(context);
+              if (reportController.text.trim().isEmpty) {
+                Get.snackbar(
+                  'Notice',
+                  'Report field is empty',
+                  backgroundColor: AppColors.errorSnackbar,
+                  colorText: AppColors.errorSnackbarText,
+                );
+              } else {
+                // Kirim laporan bug
+                await userController.reportBug(reportController.text);
+                Navigator.pop(context);
+              }
             },
             style: TextButton.styleFrom(
               backgroundColor: AppColors.primary,
@@ -239,10 +277,10 @@ class MyAccount extends StatelessWidget {
     if (user == null) {
       return const Center(child: CircularProgressIndicator());
     }
-    
+
     return SizedBox(
-      height: 150,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             'Account',
@@ -291,8 +329,8 @@ class MyAccount extends StatelessWidget {
   // Widget untuk menampilkan informasi tentang aplikasi
   Widget about(context) {
     return SizedBox(
-      height: 300,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             'About SwiftNews',

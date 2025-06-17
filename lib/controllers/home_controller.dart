@@ -8,8 +8,8 @@ import 'package:newsapp/models/news.dart';
 class HomeController extends GetxController {
   final String baseUrl = 'https://newsapi.org/v2';
 
-  var topHeadlines = <News>[].obs; // Variabel untuk berita utama
-  var popularNews = <News>[].obs; // Variabel untuk berita populer
+  var topHeadlines = <News>[].obs; // List menyimpan berita utama
+  var popularNews = <News>[].obs; // List menyimpan berita populer
   var isLoading = false.obs;
 
   @override
@@ -18,7 +18,7 @@ class HomeController extends GetxController {
     fetchNews(type: 'top-headlines'); // Ambil berita top
     fetchNews(type: 'everything', sortBy: 'popularity'); // Ambil berita populer
   } 
-
+  
   // FUNCTION: Mengambil berita dari API
   Future<void> fetchNews({
     required String type,

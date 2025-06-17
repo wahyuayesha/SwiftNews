@@ -41,7 +41,7 @@ dependencies:
   google_sign_in:
   
   firebase_analytics:
-
+  
   # Other Packages
   cupertino_icons: ^1.0.8
   get: ^4.7.2

@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:newsapp/constants/app_routes.dart';
 import 'package:newsapp/constants/colors.dart';
 import 'package:newsapp/controllers/auth_controller.dart';
 import 'package:newsapp/controllers/bookmark_controller.dart';
@@ -52,6 +53,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
+      getPages: AppRoutes.routes,
       home: SafeArea(child: SplashScreen()), // Default halaman utama
       theme: ThemeData(
         colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.deepOrange),
