@@ -52,8 +52,8 @@ Built with Flutter and GetX, SwiftNews focuses on lightweight performance, respo
 ## 🚀 Installation
 
 ```bash id="i5w8rz"
-git clone https://github.com/your-username/swiftnews.git
-cd swiftnews
+git clone https://github.com/wahyuayesha/SwiftNews
+cd SwiftNews
 flutter pub get
 flutter run
 ```
