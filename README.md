@@ -1,27 +1,65 @@
-📰 SWIFTNEWS
+# 📰 SwiftNews
 
-A simple and elegant Flutter news application that fetches and displays up-to-date news articles from NewsAPI.org. Built using GetX for state management and includes Shimmer loading animation for a better user experience.
+## 📌 Overview
 
-🚀 FEATURES
+SwiftNews is a simple and elegant Flutter news application that delivers the latest headlines using the NewsAPI service. The app is designed with a clean user interface and smooth user experience, allowing users to explore trending news quickly and efficiently.
 
-🗂 Category-based filtering (e.g., Business, Technology, Health)
+Built with Flutter and GetX, SwiftNews focuses on lightweight performance, responsive design, and easy navigation.
 
-🔍 Search news based on keywords
+---
 
-🔖 Bookmark news that interests you to read later
+## 🚀 Key Features
 
-⚡ Smooth loading experience with shimmer placeholders
+* **News Categories**
+  Access curated articles across multiple categories such as Business, Technology, Health, Sports, and Entertainment.
 
-🎯 Clean and modern UI with Material Design
+* **Keyword Search**
+  Search relevant news articles in real time.
 
-🧠 Simple state management using GetX
+* **Bookmark System**
+  Save selected articles for later reading.
 
-📸 SCREENSHOTS
+* **Shimmer Loading States**
+  Improve user experience with elegant loading placeholders.
 
-<div style="display: flex; gap: 20px;">
-  <img src="https://github.com/user-attachments/assets/d9871b28-7847-4a4a-bc3c-abcd63714ea9" width="300">
-  <img src="https://github.com/user-attachments/assets/a04059bc-d692-4b50-9995-42a55ffbd7d9" width="300">
-</div>
+* **Responsive Material UI**
+  Clean and intuitive interface optimized for mobile devices.
 
+* **Reactive Architecture**
+  Powered by GetX for lightweight and scalable state management.
 
+---
 
+## 🛠️ Technology Stack
+
+* **Flutter** — Cross-platform mobile application framework
+* **Dart** — Primary development language
+* **NewsAPI** — External news data provider
+* **GetX** — State management, dependency injection, and routing
+* **Shared Preferences** — Local persistence for bookmarks *(if implemented)*
+
+---
+
+## 📸 Application Preview
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/d9871b28-7847-4a4a-bc3c-abcd63714ea9" width="260">
+  <img src="https://github.com/user-attachments/assets/a04059bc-d692-4b50-9995-42a55ffbd7d9" width="260">
+</p>
+
+---
+
+## 🚀 Installation
+
+```bash id="i5w8rz"
+git clone https://github.com/your-username/swiftnews.git
+cd swiftnews
+flutter pub get
+flutter run
+```
+
+---
+
+## 🎯 Project Purpose
+
+SwiftNews was developed to showcase practical mobile engineering skills in Flutter, including third-party API integration, scalable state management, and polished user interface development.
